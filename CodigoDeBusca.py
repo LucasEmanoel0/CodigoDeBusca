@@ -37,7 +37,7 @@ pos = {
     "C":(3.6,1.4),
     "D":(7.1,1.1),
     "E":(7.7,6.6),
-    "F":(9.3,3.7),
+    "F":(9,3),
 }
 
 # Define a posição dos rótulos dos nós
@@ -47,14 +47,19 @@ pos_node_atributes = {
     "C":(3.6,0.4),
     "D":(7.1,0.1),
     "E":(7.7,7.3),
-    "F":(10.8,3.7),
+    "F":(10,3),
 }
+
+def dist(a, b):
+    return ((pos[a][0] - pos[a][1]) ** 2 + (pos[b][0] - pos[b][1]) ** 2) ** 0.5
+
 
 # Define os rótulos das arestas
 edge_labels={(u,v):d["distance"] for u,v,d in G.edges(data=True)}
 
 # Define os rótulos dos nós
 node_labels = {n: d["Name"] for n, d in G.nodes(data=True)}
+
 
 # Desenha os nós e as arestas do grafo
 nx.draw(G, pos=pos, with_labels=True, node_color="red", node_size=2000, font_color="white", font_size=20, font_family="Times New Roman", font_weight="bold", width=5, edge_color="lightgray")
@@ -65,8 +70,14 @@ nx.draw_networkx_labels(G, pos=pos_node_atributes, labels=node_labels, font_colo
 # Adiciona os rótulos das arestas ao desenho
 nx.draw_networkx_edge_labels(G, pos=pos, edge_labels=edge_labels, label_pos=0.5)
 
+path = nx.astar_path(G, "A", "F", heuristic=dist, weight="distance")
+length = nx.astar_path_length(G, "A", "F", heuristic=dist, weight="distance")
+print("Path: ", path)
+print("Path length: ", length)
+
 # Define as margens do gráfico
 plt.margins(0.2)
 
 # Exibe o gráfico
 plt.show()
+
